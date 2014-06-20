@@ -1,35 +1,21 @@
 # httpd
 
-FIXME: description
+Rehearsal of creating a JSON streaming REST server with Clojure.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+git clone git@github.com:korpiq/clj-httpd-rehearsal.git
 
 ## Usage
 
-FIXME: explanation
+  lein run
 
-    $ java -jar httpd-0.1.0-standalone.jar [args]
+In another terminal:
 
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+  curl http://localhost:8080/
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Kalle Hallivuori
 
 Distributed under the Eclipse Public License, the same as Clojure.
