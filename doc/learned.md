@@ -2,3 +2,7 @@
 - "lein deps" downloads deps or reports error
 
 - LightTable docs works well only inside a lein project
+
+- copied and successfully ran minimum Hello World sample from
+
+http://www.learningclojure.com/2013/01/getting-started-with-ring.html
