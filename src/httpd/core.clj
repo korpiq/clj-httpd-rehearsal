@@ -5,7 +5,11 @@
    '[ring.util.response :only [response]]
    '[ring.middleware.json :only [wrap-json-response]])
 
-(defn handler [request] (response {:hello "World!"}))
+(def next-message-id
+  (let [message-id-counter (atom 0N)]
+    (fn [] (swap! message-id-counter inc) @message-id-counter)))
+
+(defn handler [request] (response {:msg-id (next-message-id)}))
 
 (def app (wrap-json-response handler))
 

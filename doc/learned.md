@@ -11,8 +11,13 @@
 
   https://github.com/ring-clojure/ring-json
 
+- Done 2. Serve one dynamically created JSON string
+  - declared libraries used only in tests with-profile test in project.clj :profile :test
+  - unit test with clojure.test or speclj; I prefer semantics of former ("is" over "should")
+  - made message id unique with atom and hid it with let-over-lambda pattern
+  - GUI browsers make an extra request for /favicon.ico on each page load
+
 - next minimal goals:
-  2. Serve one dynamically created JSON string
   3. Serve infinite stream of JSON
   4. Allow clients to connect and disconnect at will
   5. Support some resend-state request to send "full state"
