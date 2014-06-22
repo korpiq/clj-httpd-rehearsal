@@ -1,20 +1,17 @@
-(ns httpd.core
-  (:gen-class))
+(ns httpd.core (:gen-class))
 
-(defn app [request]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body "Hello World"})
+(use
+   '[ring.adapter.jetty :only [run-jetty]]
+   '[ring.util.response :only [response]]
+   '[ring.middleware.json :only [wrap-json-response]])
 
-(require 'ring.adapter.jetty)
+(defn handler [request] (response {:hello "World!"}))
 
-(defonce server
-  (ring.adapter.jetty/run-jetty
-   #'app {:port 8080 :join? false}))
+(def app (wrap-json-response handler))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Run JSON REST HTTP service until stopped."
   [& args]
   ;; work around dangerous default behaviour in Clojure
   (alter-var-root #'*read-eval* (constantly false))
-  (println "Hello, World!"))
+  (defonce server (run-jetty #'app {:port 8080 :join? false})))
