@@ -5,10 +5,13 @@
 
 - copied and successfully ran minimum Hello World sample from
 
-http://www.learningclojure.com/2013/01/getting-started-with-ring.html
+  http://www.learningclojure.com/2013/01/getting-started-with-ring.html
+
+- Done 1. Serve one static JSON string: copied minimal JSON response method from
+
+  https://github.com/ring-clojure/ring-json
 
 - next minimal goals:
-  1. Serve one static JSON string
   2. Serve one dynamically created JSON string
   3. Serve infinite stream of JSON
   4. Allow clients to connect and disconnect at will
