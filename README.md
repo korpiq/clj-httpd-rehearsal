@@ -12,7 +12,7 @@ git clone git@github.com:korpiq/clj-httpd-rehearsal.git
 
 In another terminal:
 
-  curl http://localhost:8080/
+  curl -L http://localhost:8080/
 
 ## License
 
