@@ -4,7 +4,7 @@
             [clojure.data.json :as json]))
 
 (def last-response nil)
-(defn next-response [] (def last-response (app {})) last-response)
+(defn next-response [] (def last-response (app {:uri message-uri})) last-response)
 (defn get-response [] (or last-response (next-response)))
 (defn get-response-body [] (:body (get-response)))
 (defn get-response-body-json [] (json/read-str (get-response-body)))
