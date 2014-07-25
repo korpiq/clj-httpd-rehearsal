@@ -18,6 +18,17 @@
 - made message id unique with atom and hid it with let-over-lambda pattern
 - GUI browsers make an extra request for /favicon.ico on each page load
 
+### Fixed usage with browser
+
+- ring.util.response provides easy redirect, file-response for static content, etc
+- considered privatizing unnecessarily public core namespace members but with-meta :private is a bit verbose for that
+
+### WebSocket library selection pains
+
+- apparently the default ring.adapter.jetty does not support WebSockets due to its simplistic request-response model
+- jetty7, http-kit, webbit, aleph, or pedestal?
+- Ilari voted for http-kit; Kalle has difficulty picking any one over the others, so will try http-kit
+
 ### Next minimal goals
 
 3. Serve infinite stream of JSON
