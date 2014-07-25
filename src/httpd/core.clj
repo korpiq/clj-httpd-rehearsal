@@ -1,7 +1,7 @@
 (ns httpd.core (:gen-class))
 
 (use
-   '[ring.adapter.jetty :only [run-jetty]]
+   '[org.httpkit.server]
    '[ring.util.response]
    '[ring.middleware.json :only [wrap-json-response]])
 
@@ -28,4 +28,4 @@
   [& args]
   ;; work around dangerous default behaviour in Clojure
   (alter-var-root #'*read-eval* (constantly false))
-  (defonce server (run-jetty #'app {:port 8080 :join? false})))
+  (run-server #'app {:port 8080 :join? false}))
