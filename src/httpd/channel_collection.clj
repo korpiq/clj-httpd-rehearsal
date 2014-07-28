@@ -1,17 +1,13 @@
 (ns httpd.channel-collection)
 
-(def channels (atom []))
+(def channels (atom #{}))
 
 (defn has-channels? [] (seq @channels))
 
-(defn add-channel [new-channel] (swap! channels #(merge % new-channel)))
+(defn add-channel [new-channel] (swap! channels #(conj % new-channel)) nil)
 
-(defn remove-channel [closed-channel]
-  (swap! channels
-         (fn [old-channels]
-           (filterv #(not (identical? closed-channel %)) old-channels)))
-  nil)
+(defn remove-channel [closed-channel] (swap! channels #(disj % closed-channel)) nil)
 
 (defn each-channel [callback] (doseq [channel @channels] (callback channel)))
 
-(defn remove-all-channels [] (reset! channels []))
+(defn remove-all-channels [] (reset! channels #{}))
