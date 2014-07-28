@@ -4,7 +4,7 @@
             [clojure.data.json :as json]))
 
 (def last-response nil)
-(defn next-response [] (def last-response (app {:uri message-uri})) last-response)
+(defn next-response [] (def last-response (json-handler {})) last-response)
 (defn get-response [] (or last-response (next-response)))
 (defn get-response-body [] (:body (get-response)))
 (defn get-response-body-json [] (json/read-str (get-response-body)))
@@ -29,5 +29,4 @@
       third-id (get-next-message-id)]
   (deftest app-response-id-grows-test
     (testing "app response message id is bigger on each subsequent call")
-      (is (< first-id second-id))
-      (is (< second-id third-id))))
+      (is (< first-id second-id third-id))))
