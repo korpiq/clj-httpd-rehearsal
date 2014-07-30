@@ -7,6 +7,7 @@
   '[ring.middleware.json :only [wrap-json-response]])
 
 (def stream-uri "/stream")
+(def chat-uri "/chat.html")
 
 (def all-channels (make-channel-collection))
 
@@ -14,40 +15,24 @@
   (let [message-id-counter (atom 0N)]
     (fn [] (swap! message-id-counter inc) @message-id-counter)))
 
-(defn handler [request]
-  (let [id-to-send (next-message-id)]
-    (println "responding with " id-to-send)
-    (response {:msg-id id-to-send})))
-
-(def json-handler (wrap-json-response handler))
-
-(defn async-sender []
-  (let [message (str (:body (json-handler {})))]
-    (println "send" message)
-    (send-to-channels all-channels message)))
-
-(defn websocket-handler [channel]
-  (dotimes [_ 3] (async-sender)))
-
-(defn long-poll-handler [channel]
-  (dotimes [_ 3] (async-sender))
-;  (close channel)
-  )
+(defn welcome-new-stream-listener [channel]
+  (on-receive channel
+              (fn [message]
+                (let [id (next-message-id)
+                      full-message (str id " | " message)]
+                  (println "chat message:" full-message)
+                  (send-to-channels all-channels full-message))))
+  (collect-channel all-channels channel))
 
 (defn async-stream-handler [request]
-  (with-channel request channel
-                (collect-channel all-channels channel)
-                (println "open" channel)
-                (if (websocket? channel)
-                  (websocket-handler channel)
-                  (long-poll-handler channel))))
+  (with-channel request channel (welcome-new-stream-listener channel)))
 
 (defn request-mapper [request]
   (let [uri (str (:uri request))]
-    (println uri)
+    (println "http request:" uri)
     (cond
       (.startsWith uri stream-uri) (async-stream-handler request)
-      (.equals "/" uri) (redirect stream-uri)
+      (.equals "/" uri) (redirect chat-uri)
       :else (file-response uri {:root "static"}))))
 
 (def app request-mapper)

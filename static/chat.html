@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>WebSocket Chat</title>
+    <script src="chat.js"></script>
+    <link rel="stylesheet" type="text/css" href="chat.css" />
+</head>
+<body onload="document.getElementById('name').focus()">
+<form method="post" action="javascript:return false">
+    <textarea id="chat-view" title="Text area belong to us" disabled="disabled">Chat View</textarea>
+    <input id="name" title="All your name" size="12" onchange="setNameFrom(this)" />:
+    <input id="talk" title="What you say" type="text" size="80" onkeydown="return sendOnEnter(window.event, this)" />
+</form>
+</body>
+</html>
