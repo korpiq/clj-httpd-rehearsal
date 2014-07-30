@@ -29,6 +29,12 @@
 - jetty7, http-kit, webbit, aleph, or pedestal?
 - Ilari voted for http-kit; Kalle has difficulty picking any one over the others, so will try http-kit
 
+### Object Oriented Design Pains
+
+- OO can be done with defprotocol, defrecord, and deftype, or closures
+- Clojure functional style preference is confusing when dealing with actually transient things
+  such as collections of network connections.
+
 ### Next minimal goals
 
 3. Serve infinite stream of JSON

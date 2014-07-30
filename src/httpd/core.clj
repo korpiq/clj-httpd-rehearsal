@@ -8,6 +8,8 @@
 
 (def stream-uri "/stream")
 
+(def all-channels (make-channel-collection))
+
 (def next-message-id
   (let [message-id-counter (atom 0N)]
     (fn [] (swap! message-id-counter inc) @message-id-counter)))
@@ -22,23 +24,20 @@
 (defn async-sender []
   (let [message (str (:body (json-handler {})))]
     (println "send" message)
-    (each-channel #(do (println "send" % message) (send! % message)))))
+    (send-to-channels all-channels message)))
 
-(defn websocket-handler [channel] :todo)
+(defn websocket-handler [channel]
+  (dotimes [_ 3] (async-sender)))
+
 (defn long-poll-handler [channel]
-  (async-sender)
-  (async-sender)
-  (close channel)
+  (dotimes [_ 3] (async-sender))
+;  (close channel)
   )
 
 (defn async-stream-handler [request]
   (with-channel request channel
-                (add-channel channel)
+                (collect-channel all-channels channel)
                 (println "open" channel)
-                (on-close channel
-                          (fn [status]
-                            (println "close" channel " on " status)
-                            (remove-channel channel)))
                 (if (websocket? channel)
                   (websocket-handler channel)
                   (long-poll-handler channel))))
