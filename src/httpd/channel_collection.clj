@@ -1,8 +1,8 @@
 (ns httpd.channel-collection)
 
-(def channels (atom #{}))
+(def ^:private channels (atom #{}))
 
-(defn has-channels? [] (seq @channels))
+(defn has-channels? [] (not (empty? @channels)))
 
 (defn add-channel [new-channel] (swap! channels #(conj % new-channel)) nil)
 
