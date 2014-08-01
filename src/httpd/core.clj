@@ -1,4 +1,6 @@
-(ns httpd.core (:gen-class))
+(ns httpd.core
+  (:require [clojure.data.json :as json])
+  (:gen-class))
 
 (use
   '[httpd.channel-collection]
@@ -8,6 +10,7 @@
 
 (def stream-uri "/stream")
 (def chat-uri "/chat.html")
+(def static-files-dir "static")
 
 (def all-channels (make-channel-collection))
 
@@ -15,24 +18,31 @@
   (let [message-id-counter (atom 0N)]
     (fn [] (swap! message-id-counter inc) @message-id-counter)))
 
+(defn send-chat-message [chat-message]
+  (println "send chat message:" chat-message)
+  (send-to-channels all-channels chat-message))
+
+(defn format-chat-message [message]
+  { :pre [(= ["message" "username"] (sort (keys message)))
+          (re-matches #"^\p{L}{3,12}$" (get message "username"))
+          (re-matches #"^[\p{L}\x20-\x40]{1,99}$" (get message "message"))]}
+  (json/write-str (assoc message :id (next-message-id))))
+
 (defn welcome-new-stream-listener [channel]
   (on-receive channel
-              (fn [message]
-                (let [id (next-message-id)
-                      full-message (str id " | " message)]
-                  (println "chat message:" full-message)
-                  (send-to-channels all-channels full-message))))
+              (fn [json-message]
+                (try (send-chat-message
+                       (format-chat-message (json/read-str json-message)))
+                     (catch AssertionError e (send! channel (json/write-str {:error (.getMessage e) }))))
+                nil))
   (collect-channel all-channels channel))
 
 (defn async-stream-handler [request]
   (with-channel request channel (welcome-new-stream-listener channel)))
 
-(defn file-response-with-mimetype [uri] ; todo replace Content-Type
-  (let [response (file-response uri {:root "static"})
-        mimetype (ext-mime-type (.getName (:body response)))
-        headers-with-mimetype (assoc (:headers response) "Content-Type" mimetype)
-        ]
-    (assoc response :headers headers-with-mimetype)))
+(defn file-response-with-mimetype [uri]
+  (let [response (file-response uri {:root static-files-dir})]
+    (content-type response (ext-mime-type (.getName (:body response))))))
 
 (defn request-mapper [request]
   (let [uri (str (:uri request))]
@@ -45,7 +55,7 @@
 (def app request-mapper)
 
 (defn -main
-  "Run websocket HTTP service until stopped."
+  "Run JSON websocket HTTP service until stopped."
   [& args]
   ;; work around dangerous default behaviour in Clojure
   (alter-var-root #'*read-eval* (constantly false))
