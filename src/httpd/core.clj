@@ -4,7 +4,7 @@
   '[httpd.channel-collection]
   '[org.httpkit.server]
   '[ring.util.response]
-  '[ring.middleware.json :only [wrap-json-response]])
+  '[ring.util.mime-type])
 
 (def stream-uri "/stream")
 (def chat-uri "/chat.html")
@@ -27,18 +27,25 @@
 (defn async-stream-handler [request]
   (with-channel request channel (welcome-new-stream-listener channel)))
 
+(defn file-response-with-mimetype [uri] ; todo replace Content-Type
+  (let [response (file-response uri {:root "static"})
+        mimetype (ext-mime-type (.getName (:body response)))
+        headers-with-mimetype (assoc (:headers response) "Content-Type" mimetype)
+        ]
+    (assoc response :headers headers-with-mimetype)))
+
 (defn request-mapper [request]
   (let [uri (str (:uri request))]
     (println "http request:" uri)
     (cond
       (.startsWith uri stream-uri) (async-stream-handler request)
       (.equals "/" uri) (redirect chat-uri)
-      :else (file-response uri {:root "static"}))))
+      :else (file-response-with-mimetype uri))))
 
 (def app request-mapper)
 
 (defn -main
-  "Run JSON REST HTTP service until stopped."
+  "Run websocket HTTP service until stopped."
   [& args]
   ;; work around dangerous default behaviour in Clojure
   (alter-var-root #'*read-eval* (constantly false))
