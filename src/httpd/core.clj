@@ -28,13 +28,13 @@
           (re-matches #"^[\p{L}\x20-\x40]{1,99}$" (get message "message"))]}
   (json/write-str (assoc message :id (next-message-id))))
 
+(defn receive-message-from-channel [channel json-message]
+  (try (-> json-message json/read-str format-chat-message send-chat-message)
+       (catch AssertionError e
+         (send! channel (json/write-str {:error (.getMessage e) })))))
+
 (defn welcome-new-stream-listener [channel]
-  (on-receive channel
-              (fn [json-message]
-                (try (send-chat-message
-                       (format-chat-message (json/read-str json-message)))
-                     (catch AssertionError e (send! channel (json/write-str {:error (.getMessage e) }))))
-                nil))
+  (on-receive channel #(receive-message-from-channel channel %))
   (collect-channel all-channels channel))
 
 (defn async-stream-handler [request]
