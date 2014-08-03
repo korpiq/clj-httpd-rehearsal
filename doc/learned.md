@@ -35,8 +35,15 @@
 - Clojure functional style preference is confusing when dealing with actually transient things
   such as collections of network connections.
 
+### Done 3. Serve infinite stream of JSON
+
+- web sockets work with very simple javascript on latest Chrome, Safari, Firefox.
+- oops, todo: route messages through an agent (single thread) in clojure server to ensure equal order of messages to all clients.
+
+### Done 4. Allow clients to connect and disconnect at will
+
+- duh, this happens naturally when collecting initiated channels and handling their close events
+
 ### Next minimal goals
 
-3. Serve infinite stream of JSON
-4. Allow clients to connect and disconnect at will
 5. Support some resend-state request to send "full state"
