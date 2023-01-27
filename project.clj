@@ -1,6 +1,6 @@
 (defproject httpd "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Rehearsal in concurrent message passing in Clojure"
+  :url "https://github.com/korpiq/clj-httpd-rehearsal"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [
