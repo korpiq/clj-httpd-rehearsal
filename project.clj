@@ -8,5 +8,6 @@
                   [ring "1.3.0"]
                   [http-kit "2.1.16"]
                   [org.clojure/data.json "0.2.5"]
+                  [javax.xml.bind/jaxb-api "2.3.0"]
                   ]
   :main httpd.core)
