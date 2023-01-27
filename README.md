@@ -13,6 +13,8 @@ git clone git@github.com:korpiq/clj-httpd-rehearsal.git
 3. Enter one word as nickname into left bottom field in each browser window
 4. Enter messages in right bottom field in the browser windows to chat.
 
+You can view the message stream at http://localhost:8080/stream
+
 ## License
 
 Copyright © 2014 Kalle Hallivuori
