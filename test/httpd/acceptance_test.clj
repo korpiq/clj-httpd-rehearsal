@@ -66,6 +66,7 @@
         (put! triggers-channel :all-received)
         (let [results (collect-results)]
           (dotimes [row-number num-ok-clients]
+            (is (= (count (get results row-number)) num-ok-clients) (str "Client#" row-number " should have one message from each client."))
             (dotimes [client-number (- num-ok-clients 1)]
               (let [first-client-row (get (get results client-number) row-number)
                     next-client-number (+ client-number 1)
