@@ -10,5 +10,11 @@
                   [org.clojure/data.json "0.2.5"]
                   [javax.xml.bind/jaxb-api "2.3.0"]
                   ]
-  :profiles {:test {:dependencies [[org.clojure/core.async "1.6.673"]]}}
+  :profiles {
+     :test {
+            :dependencies
+                [
+                  [org.clojure/core.async "1.6.673"]
+                  [stylefruits/gniazdo "1.2.1"]
+                 ]}}
   :main httpd.core)

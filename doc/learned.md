@@ -44,6 +44,14 @@
 
 - duh, this happens naturally when collecting initiated channels and handling their close events
 
+### Working on acceptance test requiring all clients see simultaneously sent messages in identical order
+
+- [Gatling](https://github.com/mhjort/clj-gatling) seems awesome but not necessary for single shot of maximally simultaneous requests.
+- [Gniazdo](https://github.com/stalefruits/gniazdo) seems spot on for websocket client
+- Using core.async pub/sub to synchronize all clients to send at same moment
+  - Would there be some even more trivial replacement for old wait/notifyAll?
+
 ### Next minimal goals
 
-5. Support some resend-state request to send "full state"
+5. Some way to see back in chat history
+6. Separate chat topics (like channels in irc but maybe recursive)
