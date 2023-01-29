@@ -23,7 +23,7 @@
 
 (defn format-chat-message [message]
   { :pre [(= ["message" "username"] (sort (keys message)))
-          (re-matches #"^\p{L}{3,12}$" (get message "username"))
+          (re-matches #"^\p{L}{3,12}\p{N}{0,6}$" (get message "username"))
           (re-matches #"^[\p{L}\x20-\x40]{1,99}$" (get message "message"))]}
   (json/write-str (assoc message :id (next-message-id))))
 
