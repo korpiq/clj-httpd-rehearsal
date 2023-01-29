@@ -55,12 +55,12 @@
   (testing "Many clients sending simultaneously will all receive all messages in same order"
     (let [stop-server (server)]
       (dotimes [thread-number num-clients] (.start (Thread. #(chat-client thread-number))))
-      (println-str "Waiting for " num-clients " clients to connect...")
+      (print (str "Waiting for " num-clients " clients to connect...\n"))
       (until-timeout-or-condition 2000 #(= @connected-count num-clients))
       (is (= @connected-count num-clients) "All clients can connect")
       (put! triggers-channel :send-now)
       (let [num-ok-clients @connected-count expect-to-receive-num-messages (* num-ok-clients num-ok-clients)]
-        (println-str "Waiting until all " num-ok-clients " clients have received all messages from each other...")
+        (print (str "Waiting until all " num-ok-clients " clients have received all messages from each other...\n"))
         (until-timeout-or-condition (* expect-to-receive-num-messages 50) #(= @received-count expect-to-receive-num-messages))
         (is (= (deref received-count) expect-to-receive-num-messages) "Each client receives all messages")
         (put! triggers-channel :all-received)
